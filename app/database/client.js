@@ -6,7 +6,7 @@ dotenv.config({
 })
 
 
-async function callAtlast (){
+async function callAtlas (){
     try {
         const client = new MongoClient(process.env.MONGO_URL)
         await client.connect()
@@ -18,6 +18,6 @@ async function callAtlast (){
   
 }
 
-export default callAtlast
+export default callAtlas
 
 

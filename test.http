@@ -2,7 +2,19 @@
 @version=/api/v1
 
 
+POST http://localhost:3001/api/v1/files/image
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="singleFile"; filename="test.png"
+Content-Type: image/png
+
+< ./test.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
+###
 GET {{host}}{{version}}/users
 
 ###
@@ -13,17 +25,20 @@ GET http://localhost:3000/api/v1/users?role=admin&id=12
 GET http://localhost:3000/api/v1/users/1/admin
 
 ###
-POST http://localhost:3000/api/v1/users/register
+
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1bmFAZ21haWwuY29tIiwiaWF0IjoxNzI4MDQ3NDMzLCJleHAiOjE3MjgwNTEwMzN9.l7NFEd6V3CMzy_0uGoe40uhu3a8O4HFSpU1kPFmGdmo
+@idLuna=66ffe00c0a70f3166beb3a97
+POST http://localhost:3001/api/v1/users/register
 Content-Type: application/json
 
 {
-    "email":"luna@gmail.com",
+    "firstname":"Mousa",
+    "lastname":"Ndiaye",
+    "email":"mousa@gmail.com",
     "password":"Gogolang12121212!"
 }
 
 
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1bmFAZ21haWwuY29tIiwiaWF0IjoxNzI4MDQ3NDMzLCJleHAiOjE3MjgwNTEwMzN9.l7NFEd6V3CMzy_0uGoe40uhu3a8O4HFSpU1kPFmGdmo
-@idLuna=66ffe00c0a70f3166beb3a97
 ###
 POST http://localhost:3000/api/v1/users/login 
 Content-Type: application/json

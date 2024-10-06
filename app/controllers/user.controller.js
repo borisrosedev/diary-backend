@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import path from "path"
 import bcrypt from "bcrypt"
-import callAtlast from "../database/db.js"
+import callAtlas from "../database/client.js"
 import tryCatch from "../helpers/tryCatch.js"
 import { ObjectId } from "mongodb"
 dotenv.config({
@@ -14,7 +14,7 @@ const userController = {
     async login(req, res, next) {
 
         const { email, password } = req.body
-        const client = await callAtlast()
+        const client = await callAtlas()
         const coll = client.db().collection("users")
         // je veux récupérer les données de l'utilisateur 
         // qui a pour email l'email contenu dans la requête
@@ -52,7 +52,7 @@ const userController = {
     async createOne(req, res){
         const { email, password, firstname, lastname } = req.body // recup dans corps de requête
         const hashPassword = bcrypt.hashSync(password, 10)
-        const client = await callAtlast()
+        const client = await callAtlas()
         const coll = client.db().collection("users")
 
         tryCatch(async() => {
@@ -74,7 +74,7 @@ const userController = {
         console.log("id", id)
 
         // Connexion
-        const client = await callAtlast()
+        const client = await callAtlas()
 
         // Collection
         const coll = client.db().collection("users")
@@ -97,7 +97,7 @@ const userController = {
     },
 
     async getAll(req, res, next) {
-        const client = await callAtlast()
+        const client = await callAtlas()
         const coll = client.db().collection("users")
         tryCatch(async() => {
             const users = await coll.find().toArray()
@@ -119,7 +119,7 @@ const userController = {
     async deleteOneById(req, res, next){
 
         const id = new ObjectId(req.params.id)
-        const client = await callAtlast()
+        const client = await callAtlas()
         const coll = client.db().collection("users")
         try {
             const user = await coll.findOne({ _id: id}) 
@@ -139,8 +139,32 @@ const userController = {
    
     },
 
-    updateOneById(req, res, next){
+    async updateOneById(req, res, next){
+        const id = new ObjectId(req.params.id)
+        console.log("id", id)
 
+        // Connexion
+        const client = await callAtlas()
+
+        // Collection
+        const coll = client.db().collection("users")
+        
+        // Recherche
+        const user = await coll.findOne({ _id: id })
+
+        if(!user){
+            client.close()
+            return res.status(404).json({ message: `user with id ${id} not found`})
+        }
+
+        if(!(req.auth == user.email)) {
+            client.close()
+            return res.status(401).json({ message: `⛔️ restricted access` })
+        }
+
+        const result = await coll.updateOne({ email: user.email}, { $set: {...req.body}})
+        client.close()
+        return res.status(200).json({ message: `user updated`, result })
     },
 
   
