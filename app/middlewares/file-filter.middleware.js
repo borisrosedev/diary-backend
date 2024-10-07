@@ -12,7 +12,7 @@ export const fileFilters = {
         }
     },
     image: (req, file, cb) => {
-        const filetypes = /.png|.jpeg|.jpg/
+        const filetypes = /.png|.jpeg|.jpg|.webp/
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase())
       
         console.log("into")

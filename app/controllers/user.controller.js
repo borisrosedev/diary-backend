@@ -20,6 +20,7 @@ const userController = {
         // qui a pour email l'email contenu dans la requête
         try {
             const user = await coll.findOne({ email: email })
+            console.log("user", user)
             if(!user._id){
                 client.close()
                 return res.status(404).json({ message: `User with ${email} not found`})
@@ -92,6 +93,7 @@ const userController = {
             return res.status(401).json({ message: `⛔️ restricted access` })
         }
 
+        delete user.password
         res.status(200).json(user) 
 
     },
